@@ -1,16 +1,19 @@
 <template>
-  <div class="page"></div>
+  <div class="page">
+    <Table :tableData="tableData" />
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
 import type { ITable } from "./components/table";
-
+import Table from "./components/Table.vue";
 const tableData = ref<ITable>({
   rowCount: 10,
   columnCount: 10,
   columns: {},
   rows: {},
+  cells: {},
 });
 </script>
 <style lang="less">
@@ -19,7 +22,7 @@ body {
   .page {
     width: 100vw;
     height: 100vh;
-    background-color: #f0f0f0;
+    overflow: auto;
   }
 }
 </style>

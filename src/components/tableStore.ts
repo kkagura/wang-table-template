@@ -1,5 +1,11 @@
 import { inject, provide, reactive, readonly, type InjectionKey } from "vue";
-import type { ITable } from "./table";
+import type {
+  IColumnConfig,
+  IndexKey,
+  IRowData,
+  ITable,
+  ITableCell,
+} from "./table";
 
 export interface ITableState {
   readonly: boolean;
@@ -7,7 +13,7 @@ export interface ITableState {
 }
 
 export interface ITableActions {
-  setTableData: (tableData: ITable) => void;
+  setTableData: (tableData: Partial<ITable>) => void;
 }
 
 export interface ITableStore {
@@ -24,7 +30,35 @@ export interface IStoreConfig {
 
 const tableStoreKey: InjectionKey<Readonly<ITableStore>> = Symbol("tableStore");
 
-export function initTableStore() {
+export function initTableStore(storeConfig: IStoreConfig) {
+  const {
+    defaultRowCount = 10,
+    defaultColumnCount = 10,
+    defaultColumnWidth = 100,
+    defaultRowHeight = 100,
+  } = storeConfig;
+
+  function createColumnData(): IColumnConfig {
+    return {
+      width: defaultColumnWidth,
+    };
+  }
+
+  function createRowData(): IRowData {
+    return {
+      height: defaultRowHeight,
+    };
+  }
+
+  function createCellData(): ITableCell {
+    return {
+      template: "",
+      rowspan: 1,
+      colspan: 1,
+      merged: false,
+    };
+  }
+
   const store = reactive<ITableStore>({
     state: {
       readonly: false,
@@ -33,6 +67,7 @@ export function initTableStore() {
         columnCount: 0,
         columns: {},
         rows: {},
+        cells: {},
       },
     },
     actions: {
@@ -40,7 +75,45 @@ export function initTableStore() {
     },
   });
 
-  function setTableData(tableData: ITable) {}
+  function setTableData(tableData: Partial<ITable>) {
+    tableData = JSON.parse(JSON.stringify(tableData));
+    store.state.tableData = {
+      rowCount: tableData.rowCount ?? defaultRowCount,
+      columnCount: tableData.columnCount ?? defaultColumnCount,
+      columns: tableData.columns ?? {},
+      rows: tableData.rows ?? {},
+      cells: tableData.cells ?? {},
+    };
+    for (let i = 0; i < store.state.tableData.rowCount; i++) {
+      const key: IndexKey = `${i}`;
+      if (!store.state.tableData.rows[key]) {
+        store.state.tableData.rows[key] = createRowData();
+      }
+    }
+    for (let i = 0; i < store.state.tableData.columnCount; i++) {
+      const key: IndexKey = `${i}`;
+      if (!store.state.tableData.columns[key]) {
+        store.state.tableData.columns[key] = createColumnData();
+      }
+    }
+    for (let i = 0; i < store.state.tableData.rowCount; i++) {
+      const rowKey: IndexKey = `${i}`;
+      const row =
+        store.state.tableData.cells[rowKey] ||
+        (store.state.tableData.cells[rowKey] = {} as Record<
+          IndexKey,
+          ITableCell
+        >);
+
+      for (let j = 0; j < store.state.tableData.columnCount; j++) {
+        const columnKey: IndexKey = `${j}`;
+        if (!row[columnKey]) {
+          row[columnKey] = createCellData();
+        }
+      }
+    }
+    console.log(store.state.tableData);
+  }
 
   provide(tableStoreKey, readonly(store));
 

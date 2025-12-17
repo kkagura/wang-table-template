@@ -13,12 +13,12 @@ export interface IColumnConfig {
 
 export interface IRowData {
   height: number | string;
-  cells: Record<IndexKey, ITableCell>;
 }
 
 export interface ITable {
   rowCount: number;
+  rows: Record<IndexKey, IRowData>;
   columnCount: number;
   columns: Record<IndexKey, IColumnConfig>;
-  rows: Record<IndexKey, IRowData>;
+  cells: Record<IndexKey, Record<IndexKey, ITableCell>>;
 }
