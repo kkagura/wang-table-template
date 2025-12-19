@@ -1,4 +1,11 @@
-import { inject, provide, reactive, readonly, type InjectionKey } from "vue";
+import {
+  inject,
+  provide,
+  reactive,
+  readonly,
+  type InjectionKey,
+  type Ref,
+} from "vue";
 import type {
   IColumnConfig,
   IndexKey,
@@ -6,6 +13,7 @@ import type {
   ITable,
   ITableCell,
 } from "./table";
+import { useSelectorPlugin } from "./plugins/selector/selector";
 
 export interface ITableState {
   readonly: boolean;
@@ -30,7 +38,12 @@ export interface IStoreConfig {
 
 const tableStoreKey: InjectionKey<Readonly<ITableStore>> = Symbol("tableStore");
 
-export function initTableStore(storeConfig: IStoreConfig) {
+export function initTableStore(
+  tableContainerRef: Ref<HTMLDivElement | undefined>,
+  storeConfig: IStoreConfig
+) {
+  const { component: Selector } = useSelectorPlugin(tableContainerRef);
+
   const {
     defaultRowCount = 10,
     defaultColumnCount = 10,
@@ -117,7 +130,10 @@ export function initTableStore(storeConfig: IStoreConfig) {
 
   provide(tableStoreKey, readonly(store));
 
-  return store;
+  return {
+    store,
+    components: [Selector],
+  };
 }
 
 export function useTableStore() {

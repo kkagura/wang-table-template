@@ -1,5 +1,5 @@
 <template>
-  <div class="w-table-container">
+  <div class="w-table-container" ref="tableContainerRef">
     <table class="w-table">
       <colgroup>
         <col
@@ -20,11 +20,14 @@
         </tr>
       </tbody>
     </table>
+    <template v-for="component in components" :key="component.name">
+      <component :is="component" />
+    </template>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { watch, type PropType } from "vue";
+import { ref, watch, type PropType } from "vue";
 import type { ITable } from "./table";
 import { initTableStore } from "./tableStore";
 import TableCell from "./TableCell.vue";
@@ -37,7 +40,8 @@ const props = defineProps({
   },
 });
 
-const tableStore = initTableStore({});
+const tableContainerRef = ref<HTMLDivElement>();
+const { store: tableStore, components } = initTableStore(tableContainerRef, {});
 
 watch(
   () => props.tableData,
