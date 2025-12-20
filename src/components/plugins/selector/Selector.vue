@@ -1,18 +1,28 @@
 <template>
-  <div class="w-selector">Selector</div>
+  <div v-if="store.state.rect" class="w-selector" :style="style"></div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { computed } from "vue";
+import { useSelectorStore } from "./selector";
+
+const store = useSelectorStore();
+
+const style = computed(() => {
+  if (!store.state.rect) return {};
+  return {
+    top: store.state.rect.top - 1 + "px",
+    left: store.state.rect.left - 1 + "px",
+    width: store.state.rect.width - 2 + "px",
+    height: store.state.rect.height - 2 + "px",
+  };
+});
+</script>
 <style scoped lang="less">
 .w-selector {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100px;
-  height: 100px;
-  background-color: #fff;
-  border: 1px solid #000;
-  z-index: 1000;
+  border: var(--w-selector-border-width) solid var(--w-selector-border-color);
+  z-index: 2;
+  pointer-events: none;
 }
 </style>

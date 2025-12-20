@@ -3,19 +3,24 @@
     <table class="w-table">
       <colgroup>
         <col
-          v-for="(_, column) in tableStore.state.tableData.columnCount"
-          :key="column"
-          :style="{ width: getSizeValue(tableStore.state.tableData.columns[`${column}`]!.width) }"
+          v-for="(_, columnIndex) in tableStore.state.tableData.columnCount"
+          :key="columnIndex"
+          :style="{ width: getSizeValue(tableStore.state.tableData.columns[`${columnIndex}`]!.width) }"
         />
       </colgroup>
       <tbody>
-        <tr v-for="(_, row) in tableStore.state.tableData.rowCount" :key="row">
+        <tr
+          v-for="(_, rowIndex) in tableStore.state.tableData.rowCount"
+          :key="rowIndex"
+        >
           <TableCell
-            :row="tableStore.state.tableData.rows[`${row}`]!"
-            :column="tableStore.state.tableData.columns[`${column}`]!"
-            v-for="(_, column) in tableStore.state.tableData.columnCount"
-            :key="`${row}-${column}`"
-            :cell="tableStore.state.tableData.cells[`${row}`]![`${column}`]!"
+            :rowIndex="rowIndex"
+            :columnIndex="columnIndex"
+            :row="tableStore.state.tableData.rows[`${rowIndex}`]!"
+            :column="tableStore.state.tableData.columns[`${columnIndex}`]!"
+            v-for="(_, columnIndex) in tableStore.state.tableData.columnCount"
+            :key="`${rowIndex}-${columnIndex}`"
+            :cell="tableStore.state.tableData.cells[`${rowIndex}`]![`${columnIndex}`]!"
           />
         </tr>
       </tbody>

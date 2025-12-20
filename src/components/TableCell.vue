@@ -1,5 +1,11 @@
 <template>
-  <td class="w-table-cell" :style="cellStyle" v-if="!cell.merged"></td>
+  <td
+    class="w-table-cell"
+    :style="cellStyle"
+    v-if="!cell.merged"
+    :data-row-index="rowIndex"
+    :data-column-index="columnIndex"
+  ></td>
 </template>
 
 <script lang="ts" setup>
@@ -13,8 +19,16 @@ const props = defineProps({
     type: Object as PropType<IRowData>,
     required: true,
   },
+  rowIndex: {
+    type: Number,
+    required: true,
+  },
   column: {
     type: Object as PropType<IColumnConfig>,
+    required: true,
+  },
+  columnIndex: {
+    type: Number,
     required: true,
   },
   cell: {
@@ -30,6 +44,6 @@ const cellStyle = computed(() => ({
 </script>
 <style scoped lang="less">
 .w-table-cell {
-  border: 1px solid #000;
+  border: 1px solid #404040;
 }
 </style>
