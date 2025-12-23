@@ -11,6 +11,7 @@ export function useDragger(
   options: IDraggerOptions
 ) {
   function handleMouseDown(event: MouseEvent) {
+    if (event.which !== 1) return;
     let lastX = event.clientX;
     let lastY = event.clientY;
     options.onDragStart?.(event);
