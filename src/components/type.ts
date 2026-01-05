@@ -7,6 +7,7 @@ export interface Store {
 }
 
 export interface PluginHookRes {
+  name: string | symbol;
   component?: any;
   store?: Store;
 }

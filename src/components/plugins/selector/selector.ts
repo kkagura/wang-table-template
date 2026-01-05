@@ -159,6 +159,7 @@ function useSelectorPluginImpl(
   );
 
   return {
+    name: selectorStoreKey,
     component: Selector,
     store: selectorStore,
   };
