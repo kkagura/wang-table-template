@@ -14,6 +14,7 @@ import type {
   ITableCell,
 } from "./table";
 import { useSelectorPlugin } from "./plugins/selector/selector";
+import { useContextmenuPlugin } from "./plugins/contextmenu/contextmenu";
 
 export interface ITableState {
   readonly: boolean;
@@ -43,6 +44,7 @@ export function initTableStore(
   storeConfig: IStoreConfig
 ) {
   const { component: Selector } = useSelectorPlugin(tableContainerRef);
+  const { component: Contextmenu } = useContextmenuPlugin(tableContainerRef);
 
   const {
     defaultRowCount = 10,
@@ -132,7 +134,7 @@ export function initTableStore(
 
   return {
     store,
-    components: [Selector],
+    components: [Selector, Contextmenu],
   };
 }
 
